@@ -24,15 +24,15 @@ function activate(context) {
 	let disposable = vscode.commands.registerCommand('synthwave84.enableNeon', function () {
 
 		const isWin = /^win/.test(process.platform);
-		const appDir = path.dirname(require.main.filename);
-		const base = appDir + (isWin ? "\\vs\\code" : "/vs/code");
+		const appDir = path.dirname(vscode.env.appRoot);
+		const base = appDir + (isWin ? "\\vs\\code" : "/app/out/vs/code");
 		const electronBase = isVSCodeBelowVersion("1.70.0") ? "electron-browser" : "electron-sandbox";
 
 		const htmlFile =
 			base +
 			(isWin
-				? "\\"+electronBase+"\\workbench\\workbench.html"
-				: "/"+electronBase+"/workbench/workbench.html");
+				? "\\"+electronBase+"\\workbench\\workbench.esm.html"
+				: "/"+electronBase+"/workbench/workbench.esm.html");
 
 		const templateFile =
 				base +
@@ -82,7 +82,7 @@ function activate(context) {
 			}
 		} catch (e) {
 			if (/ENOENT|EACCES|EPERM/.test(e.code)) {
-				vscode.window.showInformationMessage("Neon Dreams was unable to modify the core VS code files needed to launch the extension. You may need to run VS code with admin privileges in order to enable Neon Dreams.");
+				vscode.window.showInformationMessage(e.code + " Neon Dreams was unable to modify the core VS code files needed to launch the extension. You may need to run VS code with admin privileges in order to enable Neon Dreams.");
 				return;
 			} else {
 				vscode.window.showErrorMessage('Something went wrong when starting neon dreams');
@@ -105,15 +105,15 @@ function deactivate() {
 
 function uninstall() {
 	var isWin = /^win/.test(process.platform);
-	var appDir = path.dirname(require.main.filename);
-	var base = appDir + (isWin ? "\\vs\\code" : "/vs/code");
+	var appDir = path.dirname(vscode.env.appRoot);
+	var base = appDir + (isWin ? "\\vs\\code" : "/app/out/vs/code");
 	var electronBase = isVSCodeBelowVersion("1.70.0") ? "electron-browser" : "electron-sandbox";
 
 	var htmlFile =
 		base +
 		(isWin
-			? "\\"+electronBase+"\\workbench\\workbench.html"
-			: "/"+electronBase+"/workbench/workbench.html");
+			? "\\"+electronBase+"\\workbench\\workbench.esm.html"
+			: "/"+electronBase+"/workbench/workbench.esm.html");
 
 	// modify workbench html
 	const html = fs.readFileSync(htmlFile, "utf-8");
